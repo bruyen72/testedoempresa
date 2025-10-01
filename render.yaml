@@ -3,12 +3,8 @@ services:
     name: tecpoint
     runtime: php
     plan: free
-    buildCommand: |
-      echo "Preparando aplicação..."
-      chmod -R 755 .
-      chmod -R 777 static/uploads
-      mkdir -p static/uploads
-    startCommand: php -S 0.0.0.0:$PORT
+    buildCommand: chmod -R 755 . && mkdir -p static/uploads && chmod 777 static/uploads
+    startCommand: php -S 0.0.0.0:$PORT -t .
     envVars:
       - key: APP_ENV
         value: production
@@ -19,5 +15,5 @@ services:
       - key: SMTP_USERNAME
         value: contato@tecpoint.net.br
       - key: SMTP_PASSWORD
-        sync: false
+        generateValue: true
     autoDeploy: true
