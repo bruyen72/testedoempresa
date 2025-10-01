@@ -1,0 +1,11 @@
+*.db
+*.log
+file_metadata.json
+static/uploads/*
+!static/uploads/.gitkeep
+failed_emails.json
+rate_limit_*.txt
+emails_sent.log
+emails_backup.log
+composer.lock
+vendor/

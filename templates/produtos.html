@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produtos - TecPoint Soluções em Comunicação</title>
+    <link rel="icon" type="image/x-icon" href="/static/LogoTecPoint.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/produtos.css">
+    <link rel="stylesheet" href="/static/css/produtoscarrousel.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="partner-logos">
+                <a href="/" class="logo">
+                    <img src="/static/LogoTecPoint.png" alt="TecPoint Logo">
+                </a>
+                <img src="/static/Logo-Parceiro-Wings.png" alt="Wings Partner Logo"
+                    class="partner-logo">
+            </div>
+            <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/produtos" class="nav-link">Produtos</a>
+                <a href="/servicos" class="nav-link">Serviços</a>
+                <a href="/contato" class="nav-link">Contato</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="produtos-hero">
+        <div class="produtos-hero-content">
+            <h1>Nossos Produtos</h1>
+            <p>Soluções completas em radiocomunicação para sua empresa</p>
+        </div>
+    </section>
+
+    <section class="filtros">
+        <div class="filtros-container">
+            <button class="filtro-btn <?php echo ($current_category ?? 'all') == 'all' ? 'active' : ''; ?>" data-category="all">Todos os
+                Produtos</button>
+            <button class="filtro-btn <?php echo ($current_category ?? '') == 'Bodycam' ? 'active' : ''; ?>"
+                data-category="Bodycam">Bodycam</button>
+            <button class="filtro-btn <?php echo ($current_category ?? '') == 'DMR' ? 'active' : ''; ?>"
+                data-category="DMR">DMR</button>
+            <button class="filtro-btn <?php echo ($current_category ?? '') == 'PoC' ? 'active' : ''; ?>"
+                data-category="PoC">PoC</button>
+            <button class="filtro-btn <?php echo ($current_category ?? '') == 'Tetra' ? 'active' : ''; ?>"
+                data-category="Tetra">Tetra</button>
+        </div>
+    </section>
+
+    <section class="produtos-grid-section <?php echo (isset($products) && count($products) == 1) ? 'single-product' : ''; ?>">
+        <div class="produtos-grid">
+            <?php if (isset($products)): ?>
+            <?php foreach ($products as $product): ?>
+            <div class="produto-card" data-category="<?php echo escapeHtml($product['category']); ?>">
+                <div class="produto-imagem">
+                    <img src="<?php echo getImageUrl($product['image_path'] ?: ''); ?>" alt="<?php echo escapeHtml($product['name']); ?>">
+                </div>
+                <h3><?php echo escapeHtml($product['name']); ?></h3>
+                <div class="produto-acoes">
+                    <a href="/produto/<?php echo $product['id']; ?>" class="button">Ver produto</a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <section class="catalogo-section">
+        <!-- Efeitos de fundo -->
+        <div class="bg-effects">
+            <div class="bg-grid"></div>
+            <div class="bg-gradient"></div>
+            <div class="bg-lines">
+                <div class="bg-line bg-line-1"></div>
+                <div class="bg-line bg-line-2"></div>
+                <div class="bg-line bg-line-3"></div>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <h1 class="heading">TecPoint Soluções em Comunicação</h1>
+            <p class="subheading">Excelência em tecnologia e comunicação</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Comprometimento</h3>
+                    <p>Dedicação total à qualidade e satisfação dos nossos clientes, oferecendo as melhores soluções em
+                        comunicação.</p>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Negócio</h3>
+                    <p>Fornecimento de soluções completas em radiocomunicação, atendendo às necessidades específicas de
+                        cada cliente.</p>
+                </div>
+
+                <div class="info-card">
+                    <i class="fas fa-eye"></i>
+                    <h3>Visão</h3>
+                    <p>Ser referência nacional em soluções de comunicação, inovando constantemente e superando
+                        expectativas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-tecpoint-logo">
+                    <img src="/static/LogoTecPoint.png" alt="TecPoint Logo"
+                        class="footer-logo">
+                </div>
+                <div class="footer-wings-logo">
+                    <img src="/static/Logo-Parceiro-Wings.png" alt="Wings Partner Logo"
+                        class="footer-partner-logo">
+                </div>
+                <p>Soluções em comunicação e tecnologia para sua empresa crescer.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/produtos">Produtos</a></li>
+                    <li><a href="/servicos">Serviços</a></li>
+                    <li><a href="/contato">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociais</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/tecpointmt/?locale=pt_BR" target="_blank" rel="noopener"
+                        title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/tecpointmt/" target="_blank" rel="noopener" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/tecpoint-mt/posts/?feedView=all" target="_blank"
+                        rel="noopener" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://wa.me/5565999772110" target="_blank" rel="noopener" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i> 
+                    </a>                    
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 TecPoint. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+
+    <script src="/static/js/produtos.js"></script>
+
+</body>
+
+</html>

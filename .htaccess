@@ -1,0 +1,72 @@
+# .htaccess FORÇADO para UOL Host Windows IIS
+DirectoryIndex index.php index.html
+
+# FORÇA o index.php como página principal
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Força página inicial para index.php
+    RewriteRule ^$ index.php [L]
+    RewriteRule ^index$ index.php [L]
+    RewriteRule ^index/$ index.php [L]
+    
+    # Permite arquivos estáticos
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule \.(css|js|png|jpg|jpeg|gif|ico|pdf|txt|woff|woff2|ttf|svg)$ - [L]
+    
+    # Permite pastas existentes
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    
+    # Redireciona tudo mais para index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# CONFIGURAÇÕES ESPECÍFICAS UOL HOST
+<IfModule mod_php8.c>
+    php_value auto_prepend_file ""
+    php_value auto_append_file ""
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# FORÇA TIPOS MIME
+<IfModule mod_mime.c>
+    AddType application/x-httpd-php .php
+    AddType text/html .php
+</IfModule>
+
+# Protege arquivos sensíveis
+<Files "*.json">
+    Deny from all
+</Files>
+<Files "*.log">
+    Deny from all
+</Files>
+<Files "*.db">
+    Deny from all
+</Files>
+
+# Permite acesso específico aos arquivos principais
+<Files "index.php">
+    Allow from all
+    Require all granted
+</Files>
+
+<Files "teste.php">
+    Allow from all
+    Require all granted
+</Files>
+
+<Files "diagnostico-uolhost.php">
+    Allow from all
+    Require all granted
+</Files>
+
+# Headers de segurança
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+</IfModule>

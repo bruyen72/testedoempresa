@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - TecPoint</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/LogoTecPoint.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="admin-logo">
+                <img src="/static/LogoTecPoint.png" alt="TecPoint">
+                <h1>Painel Administrativo</h1>
+            </div>
+            <nav>
+                <a href="/produtos" class="button button-outline" target="_blank">
+                    <i class="fas fa-shopping-cart"></i> Ver Produtos
+                </a>
+                <a href="/servicos" class="button button-outline" target="_blank">
+                    <i class="fas fa-cogs"></i> Ver Serviços
+                </a>
+                <a href="/admin/logout" class="button button-outline">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <?php if ($flash = getFlashMessage()): ?>
+            <div class="alert alert-<?= $flash['type'] ?>">
+                <?= escapeHtml($flash['message']) ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="admin-tabs">
+            <button class="tab-button active" onclick="showTab('produtos')">Produtos</button>
+            <button class="tab-button" onclick="showTab('servicos')">Serviços</button>
+        </div>
+
+        <!-- Produtos -->
+        <div id="produtos-content" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Gerenciar Produtos</h2>
+                <a href="/admin/produtos/adicionar" class="button button-primary">
+                    <i class="fas fa-plus"></i> Adicionar Produto
+                </a>
+            </div>
+
+            <div class="grid-container">
+                <?php if (!empty($products)): ?>
+                    <?php foreach ($products as $product): ?>
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="<?= getImageUrl($product['image_path']) ?>" alt="<?= escapeHtml($product['name']) ?>">
+                        </div>
+                        <div class="card-info">
+                            <h3><?= escapeHtml($product['name']) ?></h3>
+                            <p><?= escapeHtml(substr($product['description'], 0, 100)) ?>...</p>
+                            <p><strong>Categoria:</strong> <?= escapeHtml($product['category']) ?></p>
+                            <div class="card-actions">
+                                <button class="edit-button button button-primary" data-tipo="produto" data-id="<?= $product['id'] ?>">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button onclick="abrirModalExcluirImagem('<?= $product['id'] ?>')" class="button button-danger">
+                                    <i class="fas fa-trash"></i> Excluir Imagem Principal
+                                </button>
+                                <form method="POST" action="/admin/produtos/excluir/<?= $product['id'] ?>" style="display: inline;"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                                    <button type="submit" class="button button-danger">
+                                        <i class="fas fa-trash"></i> Excluir Produto
+                                    </button>
+                                </form>
+                                <?php if (!empty($product['pdf_path'])): ?>
+                                <a href="<?= getImageUrl($product['pdf_path']) ?>" class="button button-outline" target="_blank">
+                                    <i class="fas fa-file-pdf"></i> Ver PDF
+                                </a>
+                                <button onclick="abrirModalExcluirPdf('<?= $product['id'] ?>')" class="button button-danger">
+                                    <i class="fas fa-trash"></i> Excluir PDF
+                                </button>
+                                <?php endif; ?>
+                            </div>
+                            <?php if (!empty($product['image_paths'])): ?>
+                                <?php $additional_images = jsonDecode($product['image_paths']); ?>
+                                <?php if (!empty($additional_images)): ?>
+                                <div class="additional-images">
+                                    <?php foreach ($additional_images as $image_path): ?>
+                                    <div class="additional-image-container">
+                                        <img src="<?= getImageUrl($image_path) ?>" alt="Imagem Adicional">
+                                        <button onclick="abrirModalExcluirImagemAdicional('<?= $product['id'] ?>', '<?= escapeHtml($image_path) ?>')" class="button button-danger">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <p>Nenhum produto cadastrado ainda.</p>
+                        <a href="/admin/produtos/adicionar" class="button button-primary">
+                            <i class="fas fa-plus"></i> Adicionar Primeiro Produto
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Serviços -->
+        <div id="servicos-content" class="tab-content" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2>Gerenciar Serviços</h2>
+                <a href="/admin/servicos/adicionar" class="button button-primary">
+                    <i class="fas fa-plus"></i> Adicionar Serviço
+                </a>
+            </div>
+
+            <div class="grid-container">
+                <?php if (!empty($services)): ?>
+                    <?php foreach ($services as $service): ?>
+                    <div class="card">
+                        <div class="card-image">
+                            <img src="<?= getImageUrl($service['image_path']) ?>" alt="<?= escapeHtml($service['name']) ?>">
+                        </div>
+                        <div class="card-info">
+                            <h3><?= escapeHtml($service['name']) ?></h3>
+                            <p><?= escapeHtml(substr($service['description'], 0, 100)) ?>...</p>
+                            <p><strong>Categoria:</strong> <?= escapeHtml($service['category']) ?></p>
+                            <?php if (!empty($service['features'])): ?>
+                                <?php $features = jsonDecode($service['features']); ?>
+                                <?php if (!empty($features)): ?>
+                                <ul class="features-list">
+                                    <?php foreach ($features as $feature): ?>
+                                    <li><i class="fas fa-check"></i> <?= escapeHtml($feature) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <div class="card-actions">
+                                <button class="edit-button button button-primary" data-tipo="servico" data-id="<?= $service['id'] ?>">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <form method="POST" action="/admin/servicos/excluir/<?= $service['id'] ?>" style="display: inline;"
+                                    onsubmit="return confirm('Tem certeza que deseja excluir este serviço?');">
+                                    <button type="submit" class="button button-danger">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <p>Nenhum serviço cadastrado ainda.</p>
+                        <a href="/admin/servicos/adicionar" class="button button-primary">
+                            <i class="fas fa-plus"></i> Adicionar Primeiro Serviço
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Modal de Edição de Produto -->
+        <div class="modal" id="modalEdicaoProduto">
+            <div class="modal-content">
+                <button class="modal-close" onclick="fecharModalProduto()">&times;</button>
+                <h3>Editar Produto</h3>
+                <form id="formEdicaoProduto" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="nomeProduto">Nome</label>
+                        <input type="text" id="nomeProduto" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricaoProduto">Descrição</label>
+                        <textarea id="descricaoProduto" name="description" class="form-control" rows="4"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoriaProduto">Categoria</label>
+                        <select id="categoriaProduto" name="category" class="form-control" required>
+                            <option value="DMR">DMR</option>
+                            <option value="PoC">PoC</option>
+                            <option value="Tetra">Tetra</option>
+                            <option value="Bodycam">Bodycam</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagemProduto">Nova Imagem (opcional)</label>
+                        <input type="file" id="imagemProduto" name="image" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="imagesProduto">Imagens Adicionais (opcional, para galeria)</label>
+                        <div class="file-input-container">
+                            <input type="file" id="imagesProduto" name="images" accept=".jpg,.jpeg,.png" multiple>
+                            <small>Selecione várias imagens para criar a galeria (opcional)</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pdfProduto">Manual/Datasheet do Produto (PDF) (opcional)</label>
+                        <div class="file-input-container">
+                            <input type="file" id="pdfProduto" name="pdf" accept=".pdf">
+                            <small>Formato aceito: PDF (máx. 50MB se ajustado no servidor).</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Especificações</label>
+                        <div id="specs-list"></div>
+                        <button type="button" onclick="adicionarSpec()" class="button button-outline">
+                            <i class="fas fa-plus"></i> Adicionar Especificação
+                        </button>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="button button-primary">Salvar</button>
+                        <button type="button" onclick="fecharModalProduto()"
+                            class="button button-outline">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Edição de Serviço -->
+        <div class="modal" id="modalEdicaoServico">
+            <div class="modal-content">
+                <button class="modal-close" onclick="fecharModalServico()">&times;</button>
+                <h3>Editar Serviço</h3>
+                <form id="formEdicaoServico" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="nomeServico">Nome</label>
+                        <input type="text" id="nomeServico" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descricaoServico">Descrição</label>
+                        <textarea id="descricaoServico" name="description" class="form-control" rows="4"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoriaServico">Categoria de Serviço</label>
+                        <select id="categoriaServico" name="category" class="form-control" required>
+                            <option value="locacao">Locação de Equipamentos</option>
+                            <option value="manutencao">Manutenção de Equipamentos</option>
+                            <option value="projetos">Projetos Técnicos</option>
+                            <option value="legalizacao">Legalização junto à ANATEL</option>
+                            <option value="implantacao">Implantação de Sistemas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagemServico">Imagem do Serviço (opcional)</label>
+                        <input type="file" id="imagemServico" name="image" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>Características do Serviço</label>
+                        <div id="features-list"></div>
+                        <button type="button" onclick="adicionarFeature()" class="button button-outline">
+                            <i class="fas fa-plus"></i> Adicionar Característica
+                        </button>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="button button-primary">Salvar</button>
+                        <button type="button" onclick="fecharModalServico()"
+                            class="button button-outline">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação de Exclusão de Imagem -->
+        <div class="modal" id="modalExcluirImagem">
+            <div class="modal-content">
+                <button class="modal-close" onclick="fecharModalExcluirImagem()">&times;</button>
+                <h3>Confirmar Exclusão de Imagem</h3>
+                <p>Tem certeza que deseja excluir esta imagem?</p>
+                <div class="modal-actions">
+                    <button type="button" class="button button-danger" onclick="confirmarExcluirImagem()">Excluir</button>
+                    <button type="button" class="button button-outline" onclick="fecharModalExcluirImagem()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação de Exclusão de PDF -->
+        <div class="modal" id="modalExcluirPdf">
+            <div class="modal-content">
+                <button class="modal-close" onclick="fecharModalExcluirPdf()">&times;</button>
+                <h3>Confirmar Exclusão de PDF</h3>
+                <p>Tem certeza que deseja excluir este PDF?</p>
+                <div class="modal-actions">
+                    <button type="button" class="button button-danger" onclick="confirmarExcluirPdf()">Excluir</button>
+                    <button type="button" class="button button-outline" onclick="fecharModalExcluirPdf()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+<!-- Modal de Confirmação de Exclusão de Imagem Adicional -->
+        <div class="modal" id="modalExcluirImagemAdicional">
+            <div class="modal-content">
+                <button class="modal-close" onclick="fecharModalExcluirImagemAdicional()">&times;</button>
+                <h3>Confirmar Exclusão de Imagem Adicional</h3>
+                <p>Tem certeza que deseja excluir esta imagem adicional?</p>
+                <div class="modal-actions">
+                    <button type="button" class="button button-danger" onclick="confirmarExcluirImagemAdicional()">Excluir</button>
+                    <button type="button" class="button button-outline" onclick="fecharModalExcluirImagemAdicional()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/dashboard.js"></script>
+
+</body>
+
+</html>

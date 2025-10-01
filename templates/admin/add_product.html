@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Produto - TecPoint Soluções em Comunicação</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/LogoTecPoint.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/add_product.css">
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="admin-logo">
+                <img src="/static/LogoTecPoint.png" alt="TecPoint Logo">
+                <h1>Adicionar Produto</h1>
+            </div>
+            <nav class="admin-nav">
+                <a href="/admin" class="button button-outline">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <?php if ($flash = getFlashMessage()): ?>
+            <div class="alert alert-<?= $flash['type'] ?>">
+                <?= escapeHtml($flash['message']) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" enctype="multipart/form-data" class="product-form">
+            <div class="form-group">
+                <label for="name">Nome do Produto*</label>
+                <input type="text" id="name" name="name" required placeholder="Ex: Rádio Digital XYZ">
+            </div>
+
+            <div class="form-group">
+                <label for="category">Categoria*</label>
+                <select id="category" name="category" required>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="Bodycam">Bodycam</option>
+                    <option value="DMR">DMR</option>
+                    <option value="PoC">PoC</option>
+                    <option value="Tetra">Tetra</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descrição do Produto*</label>
+                <textarea id="description" name="description" required placeholder="Detalhe as funcionalidades e benefícios do produto."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Especificações* (Características técnicas do produto)</label>
+                <div class="specs-container" id="specsContainer">
+                    <div class="spec-item">
+                        <input type="text" name="spec[]" placeholder="Ex: Display colorido" required>
+                        <button type="button" class="remove-spec" onclick="removeSpec(this)" title="Remover especificação">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="button button-outline" onclick="addSpec()" style="margin-top:1rem;">
+                    <i class="fas fa-plus"></i> Adicionar Especificação
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Imagem Principal do Produto*</label>
+                <div class="file-input-container">
+                    <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png" required onchange="previewImage(this)">
+                    <small>Formatos aceitos: JPG, JPEG, PNG (máx. 50MB se ajustado no servidor)</small>
+                    <div class="preview-container" id="imagePreview">
+                        <img class="preview-image" alt="Preview">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="images">Imagens Adicionais (opcional, para galeria)</label>
+                <div class="file-input-container">
+                    <input type="file" id="images" name="images[]" accept=".jpg,.jpeg,.png" multiple>
+                    <small>Selecione várias imagens para criar a galeria (opcional)</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pdf">Manual/Datasheet do Produto (PDF) (opcional)</label>
+                <div class="file-input-container">
+                    <input type="file" id="pdf" name="pdf" accept=".pdf">
+                    <small>Formato aceito: PDF (máx. 50MB se ajustado no servidor).</small>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:1rem;">
+                <button type="submit" class="button button-primary">
+                    <i class="fas fa-save"></i> Salvar Produto
+                </button>
+                <a href="/admin" class="button button-outline">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </main>
+    
+    <script>
+        function addSpec() {
+            const container = document.getElementById('specsContainer');
+            const specItem = document.createElement('div');
+            specItem.className = 'spec-item';
+            specItem.innerHTML = `
+                <input type="text" name="spec[]" placeholder="Ex: GPS Integrado" required>
+                <button type="button" class="remove-spec" onclick="removeSpec(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(specItem);
+        }
+
+        function removeSpec(button) {
+            const container = document.getElementById('specsContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const previewImg = preview.querySelector('img');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>

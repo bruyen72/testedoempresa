@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Serviço - TecPoint</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/LogoTecPoint.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/add_service.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>Cadastrar Novo Serviço</h1>
+            <p>Preencha cuidadosamente as informações do serviço que sua empresa oferece. Todos os campos são
+                importantes para uma descrição clara e atrativa.</p>
+        </div>
+
+        <?php if ($flash = getFlashMessage()): ?>
+            <div class="alert alert-<?= $flash['type'] ?>">
+                <i class="fas fa-info-circle"></i>
+                <?= escapeHtml($flash['message']) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Nome do Serviço</label>
+                <input type="text" id="name" name="name" class="form-control"
+                    placeholder="Digite o nome completo do serviço" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Descrição Detalhada</label>
+                <textarea id="description" name="description" class="form-control"
+                    placeholder="Explique detalhadamente os benefícios e características do serviço"
+                    required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Categoria do Serviço</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option value="">Selecione a categoria do serviço</option>
+                    <option value="locacao">Locação de Equipamentos</option>
+                    <option value="manutencao">Manutenção de Equipamentos</option>
+                    <option value="projetos">Projetos Técnicos</option>
+                    <option value="legalizacao">Legalização junto à ANATEL</option>
+                    <option value="implantacao">Implantação de Sistemas</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Imagem Representativa do Serviço</label>
+                <input type="file" id="image" name="image" class="form-control" accept="image/jpeg,image/png,image/webp"
+                    required>
+                <small class="form-text text-muted">Formatos aceitos: JPG, PNG, WebP. Tamanho máximo recomendado:
+                    2MB</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Características do Serviço</label>
+                <div id="features-container" class="features-container">
+                    <div class="feature-item">
+                        <input type="text" name="features[]" class="form-control"
+                            placeholder="Digite uma característica importante do serviço" required>
+                        <button type="button" class="button button-danger" onclick="this.parentElement.remove()">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="button button-outline" onclick="addFeature()">
+                    <i class="fas fa-plus"></i> Adicionar Característica
+                </button>
+            </div>
+
+            <div class="form-actions">
+                <a href="/admin" class="button button-outline">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Painel
+                </a>
+                <button type="submit" class="button button-primary">
+                    <i class="fas fa-save"></i> Salvar Serviço
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/static/js/add_service.js"></script>
+</body>
+
+</html>

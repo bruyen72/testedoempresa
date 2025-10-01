@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo escapeHtml($product['name']); ?> - TecPoint Soluções em Comunicação</title>
+    <link rel="icon" type="image/x-icon" href="/static/LogoTecPoint.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/produto_detalhe.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="partner-logos">
+                <a href="/" class="logo">
+                    <img src="/static/LogoTecPoint.png" alt="TecPoint Logo">
+                </a>
+                <img src="/static/Logo-Parceiro-Wings.png" alt="Wings Partner Logo">
+            </div>
+            <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/produtos" class="nav-link">Produtos</a>
+                <a href="/servicos" class="nav-link">Serviços</a>
+                <a href="/contato" class="nav-link">Contato</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="produto-hero">
+        <div class="produto-container">
+            <div class="produto-imagem">
+                <?php
+                $all_images = [];
+                if ($product['image_paths']) {
+                    $all_images = jsonDecode($product['image_paths']);
+                }
+                if (empty($all_images) && $product['image_path']) {
+                    $all_images = [$product['image_path']];
+                }
+                ?>
+                
+                <?php if (!empty($all_images)): ?>
+                <img id="mainImage" src="<?php echo getImageUrl($all_images[0]); ?>"
+                    alt="<?php echo escapeHtml($product['name']); ?>">
+                
+                <?php if (count($all_images) > 1): ?>
+                <div class="thumbnails">
+                    <?php foreach ($all_images as $img_path): ?>
+                    <div class="thumbnail" data-img="<?php echo getImageUrl($img_path); ?>">
+                        <img src="<?php echo getImageUrl($img_path); ?>" alt="Thumb">
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+                <?php endif; ?>
+            </div>
+            <div class="produto-info">
+                <span class="produto-categoria"><?php echo escapeHtml($product['category']); ?></span>
+                <h1><?php echo escapeHtml($product['name']); ?></h1>
+                <p class="produto-descricao"><?php echo escapeHtml($product['description']); ?></p>
+
+                <div class="produto-specs">
+                    <h2>Especificações Técnicas</h2>
+                    <ul class="specs-lista">
+                        <?php $specs = jsonDecode($product['specs']); ?>
+                        <?php foreach ($specs as $spec): ?>
+                        <li><i class="fas fa-check"></i> <?php echo escapeHtml($spec); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+
+                <div class="produto-acoes">
+                    <?php if ($product['pdf_path']): ?>
+                    <a href="<?php echo getImageUrl($product['pdf_path']); ?>" class="button button-primary"
+                        target="_blank">
+                        <i class="fas fa-file-pdf"></i> Ver Catálogo
+                    </a>
+                    <?php endif; ?>
+                    <a href="#" class="button button-outline" id="quotationButton">
+                        <i class="fas fa-envelope"></i> Solicitar Orçamento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Fullscreen -->
+    <div class="modal" id="imageModal">
+        <button class="close-btn" id="closeModal">&times;</button>
+        <button class="modal-nav-btn prev" id="modalPrevBtn"><i class="fas fa-chevron-left"title="Previous"></i></button>
+        <div class="modal-content" id="modalContent">
+            <img id="modalImage" src="" alt="Imagem Ampliada">
+        </div>
+        <button class="modal-nav-btn next" id="modalNextBtn"><i class="fas fa-chevron-right"title="Next"></i></button>
+    </div>
+
+    <!-- Quotation Modal -->
+    <div class="quotation-modal" id="quotationModal">
+        <div class="quotation-form">
+            <button class="close-form" id="closeQuotationForm">&times;</button>
+            <h2>Solicitar Cotação</h2>
+
+            <div class="product-preview">
+                <img id="quotationProductImage" src="" alt="Produto">
+                <div class="product-preview-info">
+                    <h3 id="quotationProductName"></h3>
+                    <p id="quotationProductCategory"></p>
+                </div>
+            </div>
+
+            <form id="quotationForm">
+                <div class="form-group">
+                    <label for="name">Nome Completo *</label>
+                    <input type="text" id="name" name="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail *</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone *</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Empresa</label>
+                    <input type="text" id="company" name="company">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantidade *</label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Mensagem Adicional</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+
+                <button type="submit" class="button button-primary">
+                    <i class="fas fa-paper-plane"></i> Enviar Solicitação
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="partner-logos">
+                    <img src="/static/LogoTecPoint.png" alt="TecPoint Logo"
+                        class="footer-logo">
+                    <img src="/static/Logo-Parceiro-Wings.png" alt="Wings Partner Logo">
+                </div>
+                <p>Soluções em comunicação e tecnologia para sua empresa crescer.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/produtos">Produtos</a></li>
+                    <li><a href="/servicos">Serviços</a></li>
+                    <li><a href="/contato">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociais</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/tecpointmt/?locale=pt_BR" target="_blank" rel="noopener"
+                        title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/tecpointmt/" target="_blank" rel="noopener" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/tecpoint-mt/posts/?feedView=all" target="_blank"
+                        rel="noopener" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://wa.me/5565999772110" target="_blank" rel="noopener" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>                    
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 TecPoint. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    <script src="/static/js/produto_detalhe.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - TecPoint Serviços em Comunicação</title>
+    <link rel="icon" type="image/x-icon" href="/static/LogoTecPoint.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/solucoes.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="partner-logos">
+                <a href="/" class="logo">
+                    <img src="/static/LogoTecPoint.png" alt="TecPoint Logo">
+                </a>
+                <img src="/static/Logo-Parceiro-Wings.png" alt="Wings Partner Logo" class="partner-logo">
+            </div>
+            <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+            <nav class="nav-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/produtos" class="nav-link">Produtos</a>
+                <a href="/servicos" class="nav-link">Serviços</a>
+                <a href="/contato" class="nav-link">Contato</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Serviços -->
+    <section class="solucoes-hero">
+        <div class="solucoes-hero-content">
+            <h1>Nossos Serviços</h1>
+            <p>Oferecemos serviços especializados em radiocomunicação para potencializar a comunicação da sua empresa</p>
+            <!-- Alertas serão inseridos via JavaScript -->
+            <div id="alertContainer"></div>
+        </div>
+    </section>
+
+    <!-- Grid de Serviços -->
+    <section class="solucoes-grid" id="servicosGrid">
+        <!-- Serviços serão carregados via JavaScript -->
+        <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Carregando serviços...
+        </div>
+    </section>
+
+    <!-- Modal de Contato -->
+    <div id="modalContato" class="modal" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Cabeçalho do Modal -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Entre em Contato</h5>
+                    <button type="button" class="btn-close" onclick="fecharModalContato()">&times;</button>
+                </div>
+
+                <!-- Corpo do Modal -->
+                <div class="modal-body">
+                    <form id="formularioContato" method="POST">
+                        <!-- Campo Oculto para Categoria -->
+                        <input type="hidden" id="servicoCategoria" name="categoria">
+
+                        <!-- Campo Nome Completo -->
+                        <div class="form-group">
+                            <label for="nomeContato">Nome Completo *</label>
+                            <input type="text" class="form-control" id="nomeContato" name="nome"
+                                placeholder="Digite seu nome completo" required>
+                        </div>
+
+                        <!-- Campo E-mail -->
+                        <div class="form-group">
+                            <label for="emailContato">E-mail *</label>
+                            <input type="email" class="form-control" id="emailContato" name="email"
+                                placeholder="Digite seu e-mail" required>
+                        </div>
+
+                        <!-- Campo Telefone -->
+                        <div class="form-group">
+                            <label for="telefoneContato">Telefone</label>
+                            <input type="tel" class="form-control" id="telefoneContato" name="telefone"
+                                placeholder="(XX) XXXXX-XXXX">
+                        </div>
+
+                        <!-- Campo Mensagem -->
+                        <div class="form-group">
+                            <label for="mensagemContato">Mensagem *</label>
+                            <textarea class="form-control" id="mensagemContato" name="mensagem" rows="4"
+                                placeholder="Digite sua mensagem" required></textarea>
+                        </div>
+
+                        <!-- Botão de Envio -->
+                        <div class="form-group text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-tecpoint-logo">
+                    <img src="/static/LogoTecPoint.png" alt="TecPoint Logo" class="footer-logo">
+                </div>
+                <div class="footer-wings-logo">
+                    <img src="/static/Logo-Parceiro-Wings.png" alt="Wings Partner Logo" class="footer-partner-logo">
+                </div>
+                <p>Serviços em comunicação e tecnologia para sua empresa crescer.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/produtos">Produtos</a></li>
+                    <li><a href="/servicos">Serviços</a></li>
+                    <li><a href="/contato">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociais</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/tecpointmt/?locale=pt_BR" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/tecpointmt/" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/tecpoint-mt/posts/?feedView=all" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://wa.me/5565999772110" target="_blank" rel="noopener" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 TecPoint. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+    <script src="/static/js/solucoes.js"></script>
+</body>
+</html>
