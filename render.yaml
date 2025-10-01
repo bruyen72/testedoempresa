@@ -1,10 +1,9 @@
 services:
   - type: web
     name: tecpoint
-    runtime: php
+    runtime: docker
     plan: free
-    buildCommand: chmod -R 755 . && mkdir -p static/uploads && chmod 777 static/uploads
-    startCommand: php -S 0.0.0.0:$PORT -t .
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_ENV
         value: production
@@ -15,5 +14,5 @@ services:
       - key: SMTP_USERNAME
         value: contato@tecpoint.net.br
       - key: SMTP_PASSWORD
-        generateValue: true
+        sync: false
     autoDeploy: true
