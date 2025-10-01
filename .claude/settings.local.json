@@ -6,7 +6,11 @@
       "Bash(curl -L https://github.com/PHPMailer/PHPMailer/archive/refs/tags/v6.9.1.zip -o phpmailer.zip)",
       "Bash(git init:*)",
       "Bash(git config:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
